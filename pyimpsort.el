@@ -7,7 +7,7 @@
 ;; Maintainer: Alain Delplanque <alaindelplanque@mailoo.org>
 ;; URL: https://github.com/emacsorphanage/pyimpsort
 ;; Package-Version: 0.1.1
-;; Package-Requires: ((emacs "24.3") (python))
+;; Package-Requires: ((emacs "24.3"))
 ;; Keywords: tools, python, convenience
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
