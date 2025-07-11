@@ -41,42 +41,10 @@ jobs:
       - run: pip install tox
       - run: tox -e py313
 
-  test-emacs24:
-    runs-on: ubuntu-latest
-    container:
-      image: silex/emacs:24.3
-    steps:
-      - uses: actions/checkout@v3
-      - run: apt-get update
-      - run: apt-get install -y python3
-      - run: emacs -Q --batch -L . -l test_pyimpsort.el --eval "(ert-run-tests-batch-and-exit)"
-
-  test-emacs26:
-    runs-on: ubuntu-latest
-    container:
-      image: silex/emacs:26
-    steps:
-      - uses: actions/checkout@v3
-      - run: apt-get update
-      - run: apt-get install -y python3
-      - run: emacs -Q --batch -L . -l test_pyimpsort.el --eval "(ert-run-tests-batch-and-exit)"
-
-  test-emacs28:
-    runs-on: ubuntu-latest
-    container:
-      image: silex/emacs:28
-    steps:
-      - uses: actions/checkout@v3
-      - run: apt-get update
-      - run: apt-get install -y python3
-      - run: emacs -Q --batch -L . -l test_pyimpsort.el --eval "(ert-run-tests-batch-and-exit)"
-
-  test-emacs30:
-    runs-on: ubuntu-latest
-    container:
-      image: silex/emacs:30
-    steps:
-      - uses: actions/checkout@v3
-      - run: apt-get update
-      - run: apt-get install -y python3
-      - run: emacs -Q --batch -L . -l test_pyimpsort.el --eval "(ert-run-tests-batch-and-exit)"
+  test-emacs:
+    strategy:
+      matrix:
+        emacs_version: [24.3, 26, 28, 30]
+    uses: ./.github/workflows/tests-emacs.yml
+    with:
+      emacs_version: ${{ matrix.emacs_version }}

@@ -1,0 +1,36 @@
+name: Run Emacs lisp tests
+
+on:
+  workflow_call:
+    inputs:
+      emacs_version:
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: silex/emacs:${{ inputs.emacs_version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python3
+        run: |
+          apt-get update
+          apt-get install -y python3
+
+      - name: Run tests
+        run: |
+          emacs --batch -Q -L . -L third-party -l ert -l "test_pyimpsort.el" \
+              -f ert-run-tests-batch-and-exit
+
+      - name: Check coverage threshold
+        run: |
+          cat coverage-emacs.txt
+          COVERAGE=$(grep pyimpsort coverage-emacs.txt \
+                         | sed 's/.*Percent \([0-9.]\+\)%.*/\1/g')
+          if [ "$COVERAGE" -lt 75 ]; then
+              echo "ERROR: 75% test coverage threshold not reached"
+              exit 1
+          fi
