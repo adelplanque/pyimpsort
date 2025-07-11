@@ -9,6 +9,19 @@
 ;;; Code:
 
 (require 'ert)
+(when (require 'undercover nil t)
+  (setq undercover-force-coverage t)
+  (undercover "pyimpsort.el"
+              (:report-file "coverage-emacs.info")
+              (:report-format 'lcov)
+              (:merge-report nil)
+              (:verbosity 10)
+              (:send-report nil))
+  (add-hook 'kill-emacs-hook
+            (lambda () (let ((undercover--report-file-path "coverage-emacs.txt"))
+                         (undercover-text--report))))
+  )
+
 (require 'pyimpsort)
 
 (defmacro pyimpsort--define-test (name input expected &optional bindings)
